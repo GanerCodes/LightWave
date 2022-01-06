@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <!-- look I'm bad at web stuff it works ok don't judge -->
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        background-color: rgb(0, 0, 0);
+        color: #FFF;
+        font-family: Sans-serif;
+        margin: auto;
+      }
+      .content {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      .item {
+        margin: 8px;
+      }
+      .text {
+        text-align: center;
+      }
+      input[type="text"], button {
+        background-color: #555;
+        border: 1px #BBB solid;
+        border-radius: 2px;
+        color: #FFF;
+      }
+      input[type="text"]::placeholder {
+        color: #AAA;
+      }
+      input[type="text"]:focus{
+        outline: none;
+        border: 1px #FFF solid;
+        background-color: grey;
+        color: #FFF;
+      }
+      button:hover {
+        transform: scale(1.04);
+        background-color: grey;
+        cursor: hand;
+      }
+      button:active {
+        background: #444;
+      }
+    </style>
+    <script>
+      function press() {
+        SSID = document.getElementById("SSID").value;
+        PASS = document.getElementById("PASS").value;
+        TOKE = document.getElementById("TOKE").value;
+        if(SSID.length == 0 || PASS.length == 0 || TOKE.length == 0) return;
+        fetch(window.location.origin + '/login', {
+          method: 'POST',
+          body: " ^Z_ " + JSON.stringify({'SSID': SSID, 'PASS': PASS, 'TOKE': TOKE}) + " ^Z_ "
+        });
+        document.getElementById("content").innerHTML = `<p class="text">Sent login info and restarted controller!<br><br>AP Connection will re-open if connection to router fails.</p>`;
+      }
+    </script>
+  </head>
+  <body>
+    <div class="content" id="content">
+      <h2 style="font-size:28px;margin-bottom:0px">LightWave Setup</h2>
+      <h5 style="font-size:12px;color:#AAA">All Fields Case Sensitive</h5>
+      <input type="text" class="item" id="SSID" placeholder="Router SSID">
+      <input type="text" class="item" id="PASS" placeholder="Router Password">
+      <input type="text" class="item" id="TOKE" placeholder="Account Token">
+      <button class="item" style="border-color:#888" onclick="press()">Submit</button>
+    </div>
+  </body>
+</html>

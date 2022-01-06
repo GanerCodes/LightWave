@@ -1,0 +1,1 @@
+esptool.py --chip esp32 -p %1 erase_flash
