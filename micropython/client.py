@@ -1,5 +1,3 @@
-# https://github.com/danni/uwebsockets
-
 import usocket as socket
 import ubinascii as binascii
 import urandom as random

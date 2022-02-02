@@ -1,5 +1,3 @@
-# https://github.com/danni/uwebsockets
-
 import ure as re
 import ustruct as struct
 import urandom as random

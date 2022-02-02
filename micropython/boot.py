@@ -123,7 +123,7 @@ try:
 except Exception as e:
     print("Could not load mode from file:", e)
     TIMED_MODES = [[-1, [
-        [bytearray([0x00, 0x00, 0x00 , 0x00]), np.array([i for i in range(LED_COUNT) if i % 2], dtype = np.uint16)],
+        [bytearray([0x00, 0x00, 0x00 , 0x00]), np.array([i for i in range(LED_COUNT) if i % 2     ], dtype = np.uint16)],
         [bytearray([0x00, 0x00, 0x255, 0x00]), np.array([i for i in range(LED_COUNT) if i % 2 == 0], dtype = np.uint16)]
     ], LED_COUNT, []]]
 
@@ -366,7 +366,7 @@ except Exception as e: # This entire section is dumb but it works
                 try:
                     if ' ^Z_ ' in c:
                         try:
-                            c = json.loads(c.split(' ^Z_ ')[1].strip()) # This is definitely the right way to do this
+                            c = json.loads(c.split(' ^Z_ ')[1].strip())
                             safeWrite(credentials, c['SSID']+'\n'+c['PASS']+'\n'+c['TOKE'])
                         except Exception as e:
                             print("Error decoding request JSON:", e)
@@ -462,7 +462,3 @@ try:
             time.sleep(0.2)      
 except:
     LOOP = False
-
-# FAQ:
-# Q1: Why use micropython in a production product?
-# A1: Shut
