@@ -243,10 +243,10 @@ def lightThread():
     buf_final = bytearray(count)
 
     TIMER_MODULO = 2 ** 32
-    NEXT_FPS_TIME, COUNTER = time.time_ns() / 1_000_000 + (FPS_DISPLAY_DELTA := 20_000), 0
+    NEXT_FPS_TIME, COUNTER = time.time_ns() // 1_000_000 + (FPS_DISPLAY_DELTA := 20_000), 0
     
     while LOOP:
-        ct_tmp = time.time_ns() / 1_000_000
+        ct_tmp = time.time_ns() // 1_000_000
         TIMER = (int(ct_tmp) + TIMEDELTA) % TIMER_MODULO
 
         COUNTER += 1
@@ -352,7 +352,7 @@ except Exception as e: # This entire section is dumb but it works
     s.bind(('', 80))
     s.listen(5)
 
-    headers = """HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"""
+    headers = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"
     pageHTML = safeRead('index.html')
 
     while True:
