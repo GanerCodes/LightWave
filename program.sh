@@ -10,4 +10,4 @@ cd ..
 echo No idea why this is the part that often takes the longest...
 sudo python /root/.local/bin/ampy --port ${DEVICE} put micropython /
 echo Done, press 'ctrl+d' in screen to reboot
-doas screen ${DEVICE} 115200
+sudo screen ${DEVICE} 115200
