@@ -447,6 +447,14 @@ try:
                     print("Resetting, modes are:", TIMED_MODES)
                     machine.reset()
                     LOOP = False
+                elif JSON['action'] == 'forget_creds':
+                    try:
+                        os.remove('credentials')
+                        print("Reset credentials.")
+                    except Exception as e:
+                        print("Error deleting credentials:", e)
+                    machine.reset()
+                    LOOP = False
                 del JSON
                 del data
             except Exception as e:
