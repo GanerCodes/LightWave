@@ -1,6 +1,5 @@
 # Make sure to install this specific branch of esptool https://github.com/m-rossi/reedsolomon/tree/fix-cythonize-when-c-file-present
-# Also this because the pip version doesn't work https://github.com/scientifichackers/ampy.git
-# Also fix any paths because theres some weird stuff that happens
+# Also fix any paths because there's some weird stuff that happens
 
 DEVICE="/dev/ttyUSB0"
 

@@ -32,8 +32,8 @@ def safeWrite(filename, content):
 if "LED_COUNT" in os.listdir():
     LED_COUNT = int(safeRead("LED_COUNT").strip())
 else:
-    safeWrite("LED_COUNT", '100')
-    LED_COUNT = 100
+    safeWrite("LED_COUNT", '150')
+    LED_COUNT = 150
 PREVIOUS_LED_COUNT = LED_COUNT
 
 if "REVERSE" in os.listdir():
