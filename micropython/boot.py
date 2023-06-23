@@ -14,6 +14,7 @@ from esp import neopixel_write
 esp.osdebug(None)
 gc.collect()
 
+PIN_NUMBER = 23
 WEBSOCKET_SERVER = "wss://brynic.ganer.xyz:2096"
 
 def boolStr(s):
@@ -52,6 +53,7 @@ else:
     safeWrite("RGB_ORDER", RGB_ORDER)
 OFFSET_R, OFFSET_G, OFFSET_B = getRGBMode(RGB_ORDER)
 
+is_ap_configuring = False
 FF = const(255)
 LOOP = True
 MODES, SHADERS = [], []
@@ -232,9 +234,9 @@ def lightInterface(buf, l : int, TIMER : int):
                 static_hsv(((0xFF * TIMER) // (100 * j1) + (k[offset] * j2 * 0xFF) // l) % 0xFF, 0xFF, 0xFF, buf, k[index] * 3)
 
 def lightThread():
-    global LOOP, LED_COUNT, PREVIOUS_LED_COUNT, TIMEDELTA, TIMED_MODES, SHADERS, MODES
+    global LOOP, LED_COUNT, PREVIOUS_LED_COUNT, TIMEDELTA, TIMED_MODES, SHADERS, MODES, is_ap_configuring
 
-    pin = machine.Pin(23)
+    pin = machine.Pin(PIN_NUMBER)
     pin.init(pin.OUT)
     
     count = 3 * LED_COUNT
@@ -247,6 +249,12 @@ def lightThread():
     
     while LOOP:
         ct_tmp = time.time_ns() // 1_000_000
+        if is_ap_configuring and ct_tmp > 500_000: # 500 seconds
+            # TODO: make it so the timeout increases if someone interacts with the local server.
+            print("AP configuration timeout exceeded: restarting.")
+            machine.reset()
+            LOOP = False # I don't think this does anything but jic
+        
         TIMER = (int(ct_tmp) + TIMEDELTA) % TIMER_MODULO
 
         COUNTER += 1
@@ -320,7 +328,6 @@ try:
     time.sleep(0.5)
     
     router_username, router_password, token = map(str.strip, safeRead(credentials).split('\n')[:3])
-    # print(router_username, router_password, token)
     print("SSID:", router_username)
     print("Router Password:", router_password)
     print("Token:", token)
@@ -340,6 +347,8 @@ try:
 except Exception as e: # This entire section is dumb but it works
     print(e)
 
+    is_ap_configuring = True # for timer reset in lightThread
+    
     ap = network.WLAN(network.AP_IF)
     ap.active(True)
     ap.config(essid = "Brynic LED Controller", password = "")
@@ -364,9 +373,9 @@ except Exception as e: # This entire section is dumb but it works
                 c = str(conn.recv(1024))
                 print("GOT C:", c)
                 try:
-                    if ' ^Z_ ' in c:
+                    if " ^Z_ " in c:
                         try:
-                            c = json.loads(c.split(' ^Z_ ')[1].strip())
+                            c = json.loads(c.split(" ^Z_ ")[1].strip())
                             safeWrite(credentials, c['SSID']+'\n'+c['PASS']+'\n'+c['TOKE'])
                         except Exception as e:
                             print("Error decoding request JSON:", e)
